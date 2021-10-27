@@ -23,4 +23,31 @@ const addOrderItems= asyncHandler(async(req,res)=>{
     }
 })
 
-module.exports={addOrderItems}
+/* @desc     Get Order details
+   @route    Get /api/orders/:id
+   @Acess    Private     */  
+
+const getOrderByID= asyncHandler(async(req,res)=>{
+    const order=await Order.findById(req.params.id).populate('user','name mail')
+    if(order)
+    {
+        res.json(order)
+    }else{
+        res.status(401)
+        throw new Error('No order found for this ID')
+    }
+})
+
+/* @desc     Get user orders
+   @route    Get /api/orders/myorders
+   @Acess    Private     */  
+
+const getMyOrders= asyncHandler(async(req,res)=>{
+    const user=req.user._id
+    const orders=await Order.find({user})
+    res.json(orders)
+})
+
+
+
+module.exports={addOrderItems, getOrderByID,getMyOrders}

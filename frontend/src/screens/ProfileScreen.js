@@ -1,16 +1,18 @@
-import React,{useState,useEffect}from 'react'
-import {Row,Col,Button, Form} from 'react-bootstrap'
+import React,{useState,useEffect, useRef}from 'react'
+import {LinkContainer} from 'react-router-bootstrap'
+import {Row,Col,Button, Form, Table} from 'react-bootstrap'
 import {useDispatch,useSelector} from 'react-redux'
 import Loader from '../components/Loader'
 import Message from '../components/Message'
 import {getUserDetails,updateUserDetails} from '../actions/userActions'
+import {getMyOrders} from '../actions/orderAction'
 
 const ProfileScreen = ({history}) => {
     const [name,setname]=useState('')
    const [email,setemail]=useState('')
    const [password,setpassword]=useState('')
    const [confirmpassword,setconfirmpassword]=useState('')
-   const [message,setmessage]=useState('')
+   const [message,setmessage]=useState(null)
 
    const dispatch=useDispatch()
 
@@ -23,23 +25,23 @@ const ProfileScreen = ({history}) => {
    const userUpdateProfile = useSelector(state=>state.userUpdateProfile)
    const {success}=userUpdateProfile
 
-   //console.log(user)
+   const myOrders = useSelector(state=>state.myOrders)
+   const {loading:loadingOrders,error:errorOrders,orders}=myOrders
 
+   let x=useRef(true)
    useEffect(()=>{
        if(!userInfo)
        {
            history.push('/login')
-        }else{
-            if(!user.name)
-            {
-                dispatch(getUserDetails('profile'))
-                
-            }else{
-                setname(user.name)
-                setemail(user.email)
-            }
-        }
-   },[user,dispatch,history,userInfo])
+       }else {if(x.current){
+           dispatch(getUserDetails('profile'))
+           x.current=false
+       }else{
+           dispatch(getMyOrders())
+           setname(user.name)
+           setemail(user.email)
+       }}
+   },[user,dispatch,userInfo,history,success])
    
    const submitHandler=(e)=>{
         e.preventDefault()
@@ -58,7 +60,7 @@ const ProfileScreen = ({history}) => {
             {message && <Message variant='danger'>{message}</Message>}
             {error && <Message variant='danger'>{error}</Message>}
             {loading && <Loader />}
-            {success && <Message variant='success'>Profile updated</Message>}
+            {success && <Message variant='success'>Profile updated. Please reload the page</Message>}
             <Form onSubmit={submitHandler}>
             <Form.Group controlId='name'>
                     <Form.Label style={{color:'black'}}>Name:</Form.Label>
@@ -91,6 +93,36 @@ const ProfileScreen = ({history}) => {
             </Col>
             <Col md={9}>
                 <h2>My Orders</h2>
+                {loadingOrders? <Loader/>: error? <Message variant='danger'>{errorOrders}</Message>:
+                 (<Table striped bordered hover responsive className='table-sm'>
+                 <thead>
+                     <tr>
+                         <th>ORDER_ID</th>
+                         <th>DATE</th>
+                         <th>TOTAL</th>
+                         <th>PAID</th>
+                         <th>DELIVERED</th>
+                         <th>MORE_INFO</th>
+                     </tr>
+                 </thead>
+                 <tbody>
+                     {orders.map(order=>(
+                         <tr key={order._id}>
+                             <td>{order._id}</td>
+                             <td>{order.createdAt.substring(0,10)}</td>
+                             <td>{order.totalPrice}</td>
+                             <td>{order.idPaid? 'Yes':<i className='fas fa-times' style={{color:'red'}}/>}</td>
+                             <td>{order.isDelivered? 'Yes':<i className='fas fa-times' style={{color:'red'}}/>}</td>
+                             <td>
+                             <LinkContainer to={`order/${order._id}`}>
+                                 <Button variant='light'>More Info</Button>
+                             </LinkContainer>
+                             </td>
+                         </tr>
+                     ))}
+                 </tbody>
+             </Table>)
+                }
             </Col>
         </Row>
     )

@@ -20,7 +20,7 @@ const orderSchema = mongoose.Schema({
     shippingAddress:{
         address:{type:String,required:true},
         city:{type:String,required:true},
-        postalCode:{type:Number,require:true},
+        postalcode:{type:String,require:true},
         country:{type:String,required:true},
     },
     paymentMethod:{

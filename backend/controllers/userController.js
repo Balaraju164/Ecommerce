@@ -42,6 +42,15 @@ const getUserProfile=asyncHandler(async(req,res)=>{
     }
 })
 
+/* @desc     GET all users
+   @route    GET /api/users
+   @Acess    private admin     */  
+
+   const getAllUsers=asyncHandler(async(req,res)=>{
+    const users=await User.find({})  //req.user -> gives same result
+    res.json(users)
+})
+
 /* @desc     Update user profile
    @route    PUT /api/user/profile
    @Acess    private     */  
@@ -95,4 +104,57 @@ const registerUser=asyncHandler(async(req,res)=>{
     }
 })
 
-module.exports = {authUser,getUserProfile,registerUser,updateUserProfile}
+/* @desc     DELETE user
+   @route    GET /api/user/:id
+   @Acess    private admin     */  
+
+const deleteUser=asyncHandler(async(req,res)=>{
+    const user=await User.findById(req.params.id) 
+    if(user){
+        await user.remove()
+        res.json({Message:'User Removed'})
+    }else{
+        res.status(404)
+        throw new Error('No user found')
+    }
+})
+
+/* @desc     GET user by id
+   @route    GET /api/user/:id
+   @Acess    private admin     */  
+
+const getUserById=asyncHandler(async(req,res)=>{
+    const user=await User.findById(req.params.id)  //req.user -> gives same result
+    if(user)
+    {
+        res.json(user)
+    }else{
+        res.status(401)
+        throw new Error('No user found')
+    }
+})
+
+/* @desc     Update user details
+   @route    PUT /api/user/:id
+   @Acess    private     */  
+
+const updateUserById=asyncHandler(async(req,res)=>{
+    const user=await User.findById(req.params.id)  //req.user -> gives same result
+    if (user) {
+        user.name=req.body.name || user.name
+        user.mail=req.body.mail || user.mail
+        user.isAdmin=req.body.isAdmin || user.isAdmin
+        const updateUser= await user.save()
+        res.json({
+            _id:updateUser._id,
+            name:updateUser.name,
+            email:updateUser.mail,
+            admin:updateUser.isAdmin,
+        })
+    } else {
+        res.status(404)
+        throw new Error('user not found')
+    }
+})
+
+module.exports = {authUser,getUserProfile,registerUser,updateUserProfile,getAllUsers,deleteUser,getUserById,updateUserById}
