@@ -4,6 +4,7 @@ import {Navbar,Nav,Container,Row,Col, NavDropdown} from 'react-bootstrap'
 import {LinkContainer} from 'react-router-bootstrap'
 import {useDispatch,useSelector} from 'react-redux'
 import {logout} from '../actions/userActions'
+import SearchBox from './SearchBox'
 
 const Header = ({history}) => {
     const userLogin=useSelector(state=>state.userLogin)
@@ -24,6 +25,9 @@ const Header = ({history}) => {
                         <LinkContainer to='/'><Navbar.Brand>Pbrs_Ecommerce</Navbar.Brand></LinkContainer>
                         <Navbar.Toggle aria-controls="basic-navbar-nav" />
                         </Col>
+                    </Row>
+                    <Row>
+                    <Col><SearchBox/></Col>
                     </Row>
                     <Row>
                         <Col>

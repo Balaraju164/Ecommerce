@@ -6,9 +6,20 @@ const Product = require('../models/productmodel')
    @Acess    Public     */  
 
 const getProducts= asyncHandler(async(req,res)=>{
-    const products = await Product.find({})
-    //throw new Error('All products were disclosed')
-    res.json(products)
+    const pageSize=10
+    const page= Number(req.query.pageNumber) || 1
+
+    const keyword=req.query.keyword? {
+        name:{
+            $regex:req.query.keyword,
+            $options:'i'
+        }
+    }:{}
+
+    const count= await Product.countDocuments({...keyword})
+    const products = await Product.find({...keyword}).limit(pageSize).skip(pageSize*(page-1))
+
+    res.json({products,page,pages:Math.ceil(count/pageSize)})
 })
 
 /* @desc     fetch single products
@@ -63,8 +74,8 @@ const createProduct=asyncHandler(async(req,res)=>{
 })
 
 
-/* @desc     POST product
-   @route    POST /api/products
+/* @desc     update product
+   @route    PUT /api/products/:id
    @Acess    private admin     */  
 
 const updateProduct=asyncHandler(async(req,res)=>{
@@ -87,4 +98,45 @@ const updateProduct=asyncHandler(async(req,res)=>{
    }
 })
 
-module.exports={getProducts,getProductsById,deleteProduct,createProduct,updateProduct}
+/* @desc     Create review of product
+   @route    POST /api/products/:id/reviews
+   @Acess    private      */  
+
+   const CreateProductReview=asyncHandler(async(req,res)=>{
+    const {rating,comment}=req.body
+    const product=await Product.findById(req.params.id)
+    if(product){
+     const alreadyReviewdProduct = product.review.find(r=>r.user.toString()===req.user._id.toString())
+     if(alreadyReviewdProduct){
+         res.status(400)
+         throw new Error('Product alredy reviewed')
+     }
+     const review={
+         name:req.user.name,
+         rating:Number(rating),
+         comment:comment,
+         user:req.user._id
+     }
+     product.review.push(review)
+     product.numReviews=product.review.length
+     product.rating=product.review.reduce((acc,item)=>item.rating+acc,0)/product.review.length
+
+    await product.save()
+    res.status(201).json({maessage:'review added'})
+
+    }else{
+     res.status(404)
+     throw new Error('No product found')
+    }
+ })
+
+ /* @desc     Get top rated products
+   @route    GET /api/products/top
+   @Acess    Public     */ 
+
+const getTopProducts= asyncHandler(async (req,res)=>{
+    const products=await Product.find({}).sort({rating:-1}).limit(3)
+    res.json(products)
+})
+
+module.exports={getProducts,getProductsById,deleteProduct,createProduct,updateProduct,CreateProductReview,getTopProducts}
