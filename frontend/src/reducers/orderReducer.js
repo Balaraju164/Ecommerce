@@ -1,6 +1,6 @@
 import { ORDER_CREATE_FAIL, ORDER_CREATE_REQUEST, ORDER_CREATE_SUCCESS,
          ORDER_DETAILS_FAIL,ORDER_DETAILS_REQUEST,ORDER_DETAILS_SUCCESS,
-         ORDER_MY_REQUEST,ORDER_MY_FAIL,ORDER_MY_RESET,ORDER_MY_SUCCESS } from "../constants/orderConstants";
+         ORDER_MY_REQUEST,ORDER_MY_FAIL,ORDER_MY_RESET,ORDER_MY_SUCCESS, ORDER_LIST_REQUEST, ORDER_LIST_SUCCESS, ORDER_LIST_FAIL, ORDER_DELIVER_REQUEST, ORDER_DELIVER_SUCCESS, ORDER_DELIVER_FAIL, ORDER_DELIVER_RESET, ORDER_PAID_REQUEST, ORDER_PAID_SUCCESS, ORDER_PAID_FAIL, ORDER_PAID_RESET } from "../constants/orderConstants";
 
 
 export const orderCreateReducer = (state={},action)=>{
@@ -52,6 +52,61 @@ export const MyordersReducer = (state={orders:[]},action)=>{
         case ORDER_MY_RESET:
             return {}
         
+        default:
+            return state
+    }
+}
+
+export const ordersListReducer = (state={orders:[]},action)=>{
+    switch(action.type)
+    {
+        case ORDER_LIST_REQUEST:
+            return {loading:true}
+        
+        case ORDER_LIST_SUCCESS:
+            return {loading:false, orders:action.payload}
+
+        case ORDER_LIST_FAIL:
+            return {loading:false, error:action.payload}
+
+        default:
+            return state
+    }
+}
+
+export const ordersDeliverReducer = (state={},action)=>{
+    switch(action.type)
+    {
+        case ORDER_DELIVER_REQUEST:
+            return {loading:true}
+        
+        case ORDER_DELIVER_SUCCESS:
+            return {loading:false, success:true}
+
+        case ORDER_DELIVER_FAIL:
+            return {loading:false, error:action.payload}
+
+        case ORDER_DELIVER_RESET:
+            return {}
+        default:
+            return state
+    }
+}
+
+export const ordersPaidReducer = (state={},action)=>{
+    switch(action.type)
+    {
+        case ORDER_PAID_REQUEST:
+            return {loading:true}
+        
+        case ORDER_PAID_SUCCESS:
+            return {loading:false, success:true}
+
+        case ORDER_PAID_FAIL:
+            return {loading:false, error:action.payload}
+
+        case ORDER_PAID_RESET:
+            return {}
         default:
             return state
     }

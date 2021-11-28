@@ -1,6 +1,8 @@
 import {
     PRODUCT_LIST_REQUEST, PRODUCT_LIST_SUCCESS, PRODUCT_LIST_ERROR,
-    PRODUCT_DETAIL_ERROR, PRODUCT_DETAIL_SUCCESS, PRODUCT_DETAIL_REQUEST
+    PRODUCT_DETAIL_ERROR, PRODUCT_DETAIL_SUCCESS, PRODUCT_DETAIL_REQUEST, 
+    PRODUCT_DELETE_REQUEST, PRODUCT_DELETE_SUCCESS, PRODUCT_DELETE_ERROR, 
+    PRODUCT_CREATE_REQUEST, PRODUCT_CREATE_SUCCESS, PRODUCT_CREATE_ERROR, PRODUCT_CREATE_RESET, PRODUCT_UPDATE_REQUEST, PRODUCT_UPDATE_SUCCESS, PRODUCT_UPDATE_ERROR, PRODUCT_UPDATE_RESET
 } from '../constants/productConstants'
 
 const initialstate = {
@@ -28,6 +30,49 @@ export const productDetailsReducers = (state = { product: { reviews: [] } }, act
             return { loading: false, product: action.payload }
         case PRODUCT_DETAIL_ERROR:
             return { loading: false, error: action.payload }
+        default:
+            return state
+    }
+}
+
+export const productDeleteReducer = (state = {}, action) => {
+    switch (action.type) {
+        case PRODUCT_DELETE_REQUEST:
+            return { loading: true}
+        case PRODUCT_DELETE_SUCCESS:
+            return { loading: false, success:true}
+        case PRODUCT_DELETE_ERROR:
+            return { loading: false, error: action.payload }
+        default:
+            return state
+    }
+}
+
+export const createProductReducer = (state = {}, action) => {
+    switch (action.type) {
+        case PRODUCT_CREATE_REQUEST:
+            return { loading: true}
+        case PRODUCT_CREATE_SUCCESS:
+            return { loading: false,success:true, product:action.payload}
+        case PRODUCT_CREATE_ERROR:
+            return { loading: false, error: action.payload }
+        case PRODUCT_CREATE_RESET:
+            return {}
+        default:
+            return state
+    }
+}
+
+export const updtaeProductReducer = (state = {}, action) => {
+    switch (action.type) {
+        case PRODUCT_UPDATE_REQUEST:
+            return { loading: true}
+        case PRODUCT_UPDATE_SUCCESS:
+            return { loading: false,success:true, product:action.payload}
+        case PRODUCT_UPDATE_ERROR:
+            return { loading: false, error: action.payload }
+        case PRODUCT_UPDATE_RESET:
+            return {}
         default:
             return state
     }

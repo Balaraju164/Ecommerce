@@ -111,7 +111,7 @@ const ProfileScreen = ({history}) => {
                              <td>{order._id}</td>
                              <td>{order.createdAt.substring(0,10)}</td>
                              <td>{order.totalPrice}</td>
-                             <td>{order.idPaid? 'Yes':<i className='fas fa-times' style={{color:'red'}}/>}</td>
+                             <td>{order.isPaid? 'Yes':<i className='fas fa-times' style={{color:'red'}}/>}</td>
                              <td>{order.isDelivered? 'Yes':<i className='fas fa-times' style={{color:'red'}}/>}</td>
                              <td>
                              <LinkContainer to={`order/${order._id}`}>

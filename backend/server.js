@@ -4,7 +4,9 @@ const connectDB = require('./config/db')
 const productRoutes = require('./routes/productRoutes')
 const userRoutes = require('./routes/userRoutes')
 const orderRoutes=require('./routes/orderRoutes')
+const uploadRoutes=require('./routes/uploadRoutes')
 const {notFound,errorHandler} = require('./middleware/errorMiddleware')
+const path=require('path')
 
 dotenv.config()
 
@@ -19,6 +21,13 @@ app.get('/',(req,res)=>{res.send('Bala is running....')})
 app.use('/api/products',productRoutes)
 app.use('/api/user',userRoutes)
 app.use('/api/orders',orderRoutes)
+app.use('/api/upload',uploadRoutes)
+
+
+const directory = path.resolve(__dirname,'/frontend/public/images')
+app.use('/uploads',express.static(path.join(directory)))
+
+//console.log(directory)
 
 //Middleware -1
 app.use(notFound)

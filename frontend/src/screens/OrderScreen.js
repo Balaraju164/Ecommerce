@@ -1,10 +1,11 @@
 import React,{useEffect}from 'react'
-import {Col, Row,ListGroup,Image,Card} from 'react-bootstrap'
+import {Col, Row,ListGroup,Image,Card, Button} from 'react-bootstrap'
 import {useDispatch,useSelector} from 'react-redux'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
 import { Link } from 'react-router-dom'
-import {getOrderDetails} from '../actions/orderAction'
+import {deliverOrder, getOrderDetails, paidOrder} from '../actions/orderAction'
+import {ORDER_DELIVER_RESET, ORDER_PAID_RESET} from '../constants/orderConstants'
 
 const PlaceOrderScreen = ({match}) => {
     const orderId=match.params.id
@@ -12,9 +13,17 @@ const PlaceOrderScreen = ({match}) => {
     const dispatch = useDispatch()
 
     const orderDetails = useSelector(state=>state.orderDetails)
-
     const {order,loading,error} =orderDetails
 
+    const orderDeliver = useSelector(state=>state.orderDeliver)
+    const {success:successDeliver} =orderDeliver
+
+    const orderPaid = useSelector(state=>state.orderPaid)
+    const {success:successPaid} =orderPaid
+
+    const userLogin = useSelector(state=>state.userLogin)
+    const {userInfo}=userLogin
+    
     if(!loading)
     {
         const addDecimals=(num)=>{
@@ -26,8 +35,21 @@ const PlaceOrderScreen = ({match}) => {
 
 
     useEffect(()=>{
-        dispatch(getOrderDetails(orderId))
-    },[orderId,dispatch])
+        if(!order || successDeliver||successPaid || orderId!==order._id){
+            dispatch({type:ORDER_PAID_RESET})
+            dispatch({type:ORDER_DELIVER_RESET})
+            dispatch(getOrderDetails(orderId))
+        }
+
+    },[orderId,dispatch,successDeliver,order,successPaid])
+
+    const deliverHandler=()=>{
+        dispatch(deliverOrder(order))
+    }
+
+    const paidHandler=()=>{
+        dispatch(paidOrder(order))
+    }
 
     return loading? <Loader /> :error? <Message variant='danger'>{error}</Message>:
     <>
@@ -46,7 +68,7 @@ const PlaceOrderScreen = ({match}) => {
                                 {order.shippingAddress.postalcode},{' '}
                                 {order.shippingAddress.country}
                             </p>
-                            {order.isDelivered? <Message variant='success'>{order.DeliveredAt}</Message>:<Message variant='danger'>Not Delivered</Message>}
+                            {order.isDelivered? <Message variant='success'>Delivered At: {order.deliveredAt}</Message>:<Message variant='danger'>Not Delivered</Message>}
                         </ListGroup.Item>
 
                         <ListGroup.Item>
@@ -55,7 +77,7 @@ const PlaceOrderScreen = ({match}) => {
                                 <strong>Method:</strong>{' '}
                                 {order.paymentMethod}
                             </p>
-                            {order.isPaid? <Message variant='success'>{order.paidAt}</Message>:<Message variant='danger'>Not Paid</Message>}
+                            {order.isPaid? <Message variant='success'>Paid At :{order.paidAt}</Message>:<Message variant='danger'>Not Paid</Message>}
                         </ListGroup.Item>
 
                         <ListGroup.Item>
@@ -115,6 +137,16 @@ const PlaceOrderScreen = ({match}) => {
                                   <Col><i className="fas fa-rupee-sign"></i>{order.totalPrice}</Col>
                               </Row>
                           </ListGroup.Item>
+                          {userInfo.admin && !order.isPaid && (
+                              <ListGroup.Item>
+                                  <Button type='button' className='col-12' onClick={paidHandler}>Mark As Paid</Button>
+                              </ListGroup.Item>
+                          )}
+                          {userInfo.admin && !order.isDelivered && (
+                              <ListGroup.Item>
+                                  <Button type='button' className='col-12' onClick={deliverHandler}>Mark As Delivered</Button>
+                              </ListGroup.Item>
+                          )}
                       </ListGroup>
                   </Card>
               </Col>

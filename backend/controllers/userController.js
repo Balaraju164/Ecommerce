@@ -56,7 +56,9 @@ const getUserProfile=asyncHandler(async(req,res)=>{
    @Acess    private     */  
 
    const updateUserProfile=asyncHandler(async(req,res)=>{
-    const user=await User.findById(req.user._id)  //req.user -> gives same result
+    const user=await User.findById(req.user._id)
+    console.log(req.body)
+    
     if (user) {
         user.name=req.body.name || user.name
         user.mail=req.body.mail || user.mail
@@ -124,7 +126,7 @@ const deleteUser=asyncHandler(async(req,res)=>{
    @Acess    private admin     */  
 
 const getUserById=asyncHandler(async(req,res)=>{
-    const user=await User.findById(req.params.id)  //req.user -> gives same result
+    const user=await User.findById(req.params.id)  
     if(user)
     {
         res.json(user)
@@ -139,11 +141,11 @@ const getUserById=asyncHandler(async(req,res)=>{
    @Acess    private     */  
 
 const updateUserById=asyncHandler(async(req,res)=>{
-    const user=await User.findById(req.params.id)  //req.user -> gives same result
+    const user=await User.findById(req.params.id)
     if (user) {
         user.name=req.body.name || user.name
-        user.mail=req.body.mail || user.mail
-        user.isAdmin=req.body.isAdmin || user.isAdmin
+        user.mail=req.body.email || user.mail
+        user.isAdmin=req.body.isAdmin
         const updateUser= await user.save()
         res.json({
             _id:updateUser._id,

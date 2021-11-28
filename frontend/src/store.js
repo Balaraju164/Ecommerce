@@ -1,10 +1,10 @@
 import {createStore,applyMiddleware,combineReducers} from 'redux'
 import thunk from 'redux-thunk'
 import {composeWithDevTools} from 'redux-devtools-extension'
-import {productListReducers,productDetailsReducers} from './reducers/productReducers'
+import {productListReducers,productDetailsReducers,productDeleteReducer, createProductReducer, updtaeProductReducer} from './reducers/productReducers'
 import {cartReducer} from './reducers/cartReducers'
-import {userLoginReducer,userRegisterReducer,userDetailReducer,userUpdateProfileReducer, userListReducer, userDeleteReducer} from './reducers/userReducer'
-import {orderCreateReducer,orderDetailsReducer,MyordersReducer} from './reducers/orderReducer'
+import {userLoginReducer,userRegisterReducer,userDetailReducer,userUpdateProfileReducer, userListReducer, userDeleteReducer, userUpdateReducer} from './reducers/userReducer'
+import {orderCreateReducer,orderDetailsReducer,MyordersReducer, ordersListReducer, ordersDeliverReducer, ordersPaidReducer} from './reducers/orderReducer'
 
 const cartItemsFromStorage = localStorage.getItem('cartItems')? JSON.parse(localStorage.getItem('cartItems')):[]
 const userInfoFromStorage = localStorage.getItem('userInfo')? JSON.parse(localStorage.getItem('userInfo')):null
@@ -13,6 +13,9 @@ const shippingAddressFromStorage = localStorage.getItem('shippingAddress')? JSON
 const reducer = combineReducers({
     productList:productListReducers,
     productDetails:productDetailsReducers,
+    productDelete:productDeleteReducer,
+    productCreate:createProductReducer,
+    productUpdate:updtaeProductReducer,
     cart:cartReducer,
     userLogin:userLoginReducer,
     userRegister:userRegisterReducer,
@@ -21,8 +24,12 @@ const reducer = combineReducers({
     userUpdateProfile:userUpdateProfileReducer,
     orderCreate:orderCreateReducer,
     orderDetails:orderDetailsReducer,
+    orderList:ordersListReducer,
+    orderDeliver:ordersDeliverReducer,
+    orderPaid:ordersPaidReducer,
     myOrders:MyordersReducer,
-    userDelete:userDeleteReducer
+    userDelete:userDeleteReducer,
+    userUpdate:userUpdateReducer
 })
 
 const initialstate ={
