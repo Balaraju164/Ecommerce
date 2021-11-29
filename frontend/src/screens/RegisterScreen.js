@@ -6,6 +6,7 @@ import Loader from '../components/Loader'
 import Message from '../components/Message'
 import FormContainer from '../components/FormContainer'
 import {register} from '../actions/userActions'
+import Meta from '../components/Meta'
 
 const RegisterScreen = ({location,history}) => {
     const [name,setname]=useState('')
@@ -33,44 +34,46 @@ const RegisterScreen = ({location,history}) => {
         }
    }
     return (
+        <>
+        <Meta title='SignUp'/>
         <FormContainer>
-            <h1>Sign In</h1>
-            {message && <Message variant='danger'>{message}</Message>}
-            {error && <Message variant='danger'>{error}</Message>}
-            {loading && <Loader />}
-            <Form onSubmit={submitHandler}>
-            <Form.Group controlId='name'>
-                    <Form.Label style={{color:'black'}}>Name:</Form.Label>
-                    <Form.Control type='name' placeholder='Enter your name' value={name} 
-                    onChange={(e)=>setname(e.target.value)} style={{border:'1px solid black',marginBottom:'1rem'}}></Form.Control>
-                </Form.Group>
+        <h1>Sign In</h1>
+        {message && <Message variant='danger'>{message}</Message>}
+        {error && <Message variant='danger'>{error}</Message>}
+        {loading && <Loader />}
+        <Form onSubmit={submitHandler}>
+        <Form.Group controlId='name'>
+                <Form.Label style={{color:'black'}}>Name:</Form.Label>
+                <Form.Control type='name' placeholder='Enter your name' value={name} 
+                onChange={(e)=>setname(e.target.value)} style={{border:'1px solid black',marginBottom:'1rem'}}></Form.Control>
+            </Form.Group>
 
-                <Form.Group controlId='email'>
-                    <Form.Label style={{color:'black'}}>Email address:</Form.Label>
-                    <Form.Control type='email' placeholder='Enter your Email' value={email} 
-                    onChange={(e)=>setemail(e.target.value)} style={{border:'1px solid black',marginBottom:'1rem'}}></Form.Control>
-                </Form.Group>
+            <Form.Group controlId='email'>
+                <Form.Label style={{color:'black'}}>Email address:</Form.Label>
+                <Form.Control type='email' placeholder='Enter your Email' value={email} 
+                onChange={(e)=>setemail(e.target.value)} style={{border:'1px solid black',marginBottom:'1rem'}}></Form.Control>
+            </Form.Group>
 
-                <Form.Group controlId='password'>
-                    <Form.Label style={{color:'black'}}>Password:</Form.Label>
-                    <Form.Control type='password' placeholder='Enter your Password' value={password} 
-                    onChange={(e)=>setpassword(e.target.value)} style={{border:'1px solid black',marginBottom:'1rem'}}></Form.Control>
-                </Form.Group>
+            <Form.Group controlId='password'>
+                <Form.Label style={{color:'black'}}>Password:</Form.Label>
+                <Form.Control type='password' placeholder='Enter your Password' value={password} 
+                onChange={(e)=>setpassword(e.target.value)} style={{border:'1px solid black',marginBottom:'1rem'}}></Form.Control>
+            </Form.Group>
 
-                <Form.Group controlId='confirmpassword'>
-                    <Form.Label style={{color:'black'}}>confirm password:</Form.Label>
-                    <Form.Control type='password' placeholder='confirm password' value={confirmpassword} 
-                    onChange={(e)=>setconfirmpassword(e.target.value)} style={{border:'1px solid black',marginBottom:'1rem'}}></Form.Control>
-                </Form.Group>
+            <Form.Group controlId='confirmpassword'>
+                <Form.Label style={{color:'black'}}>confirm password:</Form.Label>
+                <Form.Control type='password' placeholder='confirm password' value={confirmpassword} 
+                onChange={(e)=>setconfirmpassword(e.target.value)} style={{border:'1px solid black',marginBottom:'1rem'}}></Form.Control>
+            </Form.Group>
 
-                <Button type='submit' variant='primary' style={{marginTop:'1rem'}}>
-                   Register
-                </Button>
-            </Form>
-            <Row className='py-3'>
-                <Col>Already have account? {' '} <Link to={redirect ?  `/login/redirect=${redirect}`:'/register'}>Login</Link></Col>
-            </Row>
-        </FormContainer>
+            <Button type='submit' variant='primary' style={{marginTop:'1rem'}}>
+               Register
+            </Button>
+        </Form>
+        <Row className='py-3'>
+            <Col>Already have account? {' '} <Link to={redirect ?  `/login/redirect=${redirect}`:'/register'}>Login</Link></Col>
+        </Row>
+    </FormContainer></>
     )
 }
 

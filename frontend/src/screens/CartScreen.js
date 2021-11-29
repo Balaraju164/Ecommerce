@@ -4,6 +4,7 @@ import {useDispatch,useSelector} from 'react-redux'
 import {Row,Col,ListGroup,Image,Form,Button,Card} from 'react-bootstrap'
 import {addToCart,removeFromCart} from '../actions/cartActions'
 import Message from '../components/Message'
+import Meta from'../components/Meta'
 
 const CartScreen = ({match,location,history}) => {
     const productID = match.params.id
@@ -29,6 +30,8 @@ const CartScreen = ({match,location,history}) => {
     }
 
     return (
+        <>
+        <Meta title='Welcome to Pbrs | Cart'/>
         <Row>
             <Col md={8}>
                 <h2>Shopping Cart</h2><Link className='btn btn-dark my-3' to={`/`}>Go Back</Link>
@@ -77,6 +80,7 @@ const CartScreen = ({match,location,history}) => {
                 </Card>
             </Col>
         </Row>
+        </>
     )
 }
 

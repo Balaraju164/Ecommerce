@@ -6,6 +6,7 @@ import Loader from '../components/Loader'
 import Message from '../components/Message'
 import {getUserDetails,updateUserDetails} from '../actions/userActions'
 import {getMyOrders} from '../actions/orderAction'
+import Meta from '../components/Meta'
 
 const ProfileScreen = ({history}) => {
     const [name,setname]=useState('')
@@ -54,6 +55,8 @@ const ProfileScreen = ({history}) => {
 
    }
     return (
+        <>
+        <Meta title='Welcome to Pbrs | Profile'/>
         <Row>
             <Col md={3}>
             <h2>User Profile</h2>
@@ -125,6 +128,7 @@ const ProfileScreen = ({history}) => {
                 }
             </Col>
         </Row>
+        </>
     )
 }
 

@@ -6,6 +6,7 @@ import Loader from '../components/Loader'
 import { Link } from 'react-router-dom'
 import {deliverOrder, getOrderDetails, paidOrder} from '../actions/orderAction'
 import {ORDER_DELIVER_RESET, ORDER_PAID_RESET} from '../constants/orderConstants'
+import Meta from '../components/Meta'
 
 const PlaceOrderScreen = ({match}) => {
     const orderId=match.params.id
@@ -51,7 +52,10 @@ const PlaceOrderScreen = ({match}) => {
         dispatch(paidOrder(order))
     }
 
-    return loading? <Loader /> :error? <Message variant='danger'>{error}</Message>:
+    return (
+    <>
+    <Meta title='Order Details'/>
+    {loading? <Loader /> :error? <Message variant='danger'>{error}</Message>:
     <>
     <h1>Order: {order._id}</h1>
     <Row>
@@ -137,6 +141,9 @@ const PlaceOrderScreen = ({match}) => {
                                   <Col><i className="fas fa-rupee-sign"></i>{order.totalPrice}</Col>
                               </Row>
                           </ListGroup.Item>
+                          <ListGroup.Item>
+                              <Message>{'Order has been placed successfully...'}</Message>
+                          </ListGroup.Item>
                           {userInfo.admin && !order.isPaid && (
                               <ListGroup.Item>
                                   <Button type='button' className='col-12' onClick={paidHandler}>Mark As Paid</Button>
@@ -152,6 +159,9 @@ const PlaceOrderScreen = ({match}) => {
               </Col>
             </Row>
     </>
+}
+    </>
+    )
 }
 
 export default PlaceOrderScreen
